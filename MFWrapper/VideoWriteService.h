@@ -8,7 +8,7 @@ namespace HerculeMaker
 namespace MFWrapper
 {
 	//Media Foundationを利用した動画出力サービス
-	public ref class VideoWriteService sealed  : IVideoWriteService
+	ref class VideoWriteService sealed  : IVideoWriteService
     {
     public:
         VideoWriteService();
