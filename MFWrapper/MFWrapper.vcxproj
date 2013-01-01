@@ -201,6 +201,7 @@
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="VideoWriteService.h" />
+    <ClInclude Include="VideoWriteServiceFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -212,6 +213,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="VideoWriteService.cpp" />
+    <ClCompile Include="VideoWriteServiceFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MediaInterfaces\MediaInterfaces.csproj">

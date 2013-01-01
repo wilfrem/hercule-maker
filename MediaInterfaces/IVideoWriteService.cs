@@ -10,7 +10,7 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
     /// <summary>
     /// 動画を出力するサービスのインターフェイス
     /// </summary>
-    public interface IVideoWriteService : IDisposable
+    public interface IVideoWriteService
     {
         /// <summary>
         /// フレームを書き出す

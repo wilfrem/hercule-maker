@@ -9,9 +9,11 @@
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="VideoWriteService.cpp" />
+    <ClCompile Include="VideoWriteServiceFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="VideoWriteService.h" />
+    <ClInclude Include="VideoWriteServiceFactory.h" />
   </ItemGroup>
 </Project>
