@@ -5,8 +5,11 @@
 using namespace Wilfrem::HerculeMaker::MFWrapper;
 using namespace Platform;
 
-VideoWriteService::VideoWriteService()
+VideoWriteService::VideoWriteService(VideoProperty^ prop, IMFSinkWriter* pSinkWriter, DWORD stream)
 {
+	m_prop = prop;
+	m_pSinkWriter = pSinkWriter;
+	m_stream = stream;
 }
 void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
 	throw ref new NotImplementedException();
