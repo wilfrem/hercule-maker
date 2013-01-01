@@ -8,17 +8,17 @@ using System.Threading.Tasks;
 namespace Wilfrem.HerculeMaker.MediaInterfaces
 {
     /// <summary>
-    /// 動画を出力するサービスのインターフェイス
+    /// 出力ストリームインターフェイス
     /// </summary>
-    public interface IVideoWriterService : IDisposable
+    public interface IOutputStream : IDisposable
     {
         /// <summary>
-        /// フレームを書き出す
+        /// 出力されるデータ
         /// </summary>
-        /// <param name="buffer">書き出すフレームデータ。ARGB情報</param>
-        void WriteFrame([ReadOnlyArray()]UInt32[] buffer);
+        /// <param name="data">データ配列</param>
+        void Write([ReadOnlyArray()]byte[] data);
         /// <summary>
-        /// 出力を閉じる
+        /// 閉じる
         /// </summary>
         void Close();
     }
