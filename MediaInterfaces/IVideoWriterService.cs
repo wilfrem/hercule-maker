@@ -23,3 +23,4 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
         void Close();
     }
 }
+ 
