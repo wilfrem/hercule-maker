@@ -10,7 +10,7 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
     /// <summary>
     /// 出力ストリームインターフェイス
     /// </summary>
-    public interface IOutputStream : IDisposable
+    public interface IOutputStream
     {
         /// <summary>
         /// 出力されるデータ
