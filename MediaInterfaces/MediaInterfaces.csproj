@@ -103,8 +103,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IOutputStream.cs" />
-    <Compile Include="IVideoWriterService.cs" />
-    <Compile Include="IVideoWriterServiceFactory.cs" />
+    <Compile Include="IVideoWriteService.cs" />
+    <Compile Include="IVideoWriteServiceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VideoEncoding.cs" />
     <Compile Include="VideoProperty.cs" />
