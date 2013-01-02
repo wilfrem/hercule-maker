@@ -20,6 +20,7 @@ namespace MediaInterfacesUnitTest
             property.Height = 11111;
             property.Width = 12345;
             property.Output = null;
+            property.FPS = 30;
         }
         [TestMethod]
         public void TestClone()
@@ -30,6 +31,8 @@ namespace MediaInterfacesUnitTest
             Assert.AreEqual(property.Height, newProp.Height);
             Assert.AreEqual(property.Output, newProp.Output);
             Assert.AreEqual(property.Width, newProp.Width);
+            Assert.AreEqual(property.FPS, newProp.FPS);
+            Assert.AreEqual(property.GetHashCode(), newProp.GetHashCode());
         }
     }
 }

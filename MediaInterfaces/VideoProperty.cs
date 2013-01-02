@@ -31,6 +31,10 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
         /// </summary>
         public VideoEncoding Format { get; set; }
         /// <summary>
+        /// FPS
+        /// </summary>
+        public uint FPS { get; set; }
+        /// <summary>
         /// コピーを作成する
         /// </summary>
         /// <returns>コピーされたVideoProperty</returns>
@@ -42,6 +46,7 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
             newobj.Height = Height;
             newobj.BitRate = BitRate;
             newobj.Format = Format;
+            newobj.FPS = FPS;
             return newobj;
         }
     }
