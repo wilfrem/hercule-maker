@@ -11,3 +11,4 @@
 #include <mfobjects.h>
 #include <mftransform.h>
 #include "Functions.h"
+#include "MediaFoundation.h"

@@ -30,7 +30,7 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
     const DWORD cbBuffer = cbWidth * m_prop->Height;
 
     BYTE *pData = NULL;
-	//バッファが書き込みサイズと一致しているかチェッk
+	//バッファが書き込みサイズと一致しているかチェック
 	if(buffer->Length == m_prop->Width * m_prop->Height)
 	{
 		throw ref new InvalidArgumentException("buffer size shuld equal to Width * Height");
@@ -105,5 +105,6 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
 	m_start += m_FrameDuration;
 }
 void VideoWriteService::Close(){
-	throw ref new NotImplementedException();
+	m_pSinkWriter->Finalize();
+    SafeRelease(&m_pSinkWriter);
 }

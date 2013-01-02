@@ -16,6 +16,7 @@
     <ClCompile Include="video\VideoMath.cpp">
       <Filter>Video</Filter>
     </ClCompile>
+    <ClCompile Include="MediaFoundation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
@@ -25,5 +26,6 @@
       <Filter>Video</Filter>
     </ClInclude>
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="MediaFoundation.h" />
   </ItemGroup>
 </Project>
