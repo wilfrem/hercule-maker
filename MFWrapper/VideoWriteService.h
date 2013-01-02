@@ -21,9 +21,11 @@ namespace MFWrapper
 		LONGLONG m_start;
 		//1フレームあたりの長さ
 		DWORD m_FrameDuration;
+		//書き出し用のクラスを格納したオブジェクト
+		IMFByteStream* m_pByteStream;
 	internal:
 		//コンストラクタ。生成済みのpSynkWriterとstreamを指定する
-        VideoWriteService(VideoProperty^ prop, IMFSinkWriter* pSinkWriter, DWORD stream);
+        VideoWriteService(VideoProperty^ prop, IMFSinkWriter* pSinkWriter, DWORD stream, IMFByteStream* pByteStream);
     public:
 		//サービス利用側からの動画フレーム出力
 		virtual void WriteFrame(const Platform::Array<uint32, 1>^ buffer);

@@ -7,13 +7,14 @@ using namespace Wilfrem::HerculeMaker::MFWrapper;
 using namespace Platform;
 using namespace Wilfrem::HerculeMaker::MFWrapper::Video;
 
-VideoWriteService::VideoWriteService(VideoProperty^ prop, IMFSinkWriter* pSinkWriter, DWORD stream)
+VideoWriteService::VideoWriteService(VideoProperty^ prop, IMFSinkWriter* pSinkWriter, DWORD stream, IMFByteStream* pByteStream)
 {
 	m_prop = prop;
 	m_pSinkWriter = pSinkWriter;
 	m_stream = stream;
 	m_start = 0;
 	m_FrameDuration = VideoMath::CalcFrameDulation(prop->FPS);
+	m_pByteStream = pByteStream;
 	if(prop->Width == 0 || prop->Height == 0){
 		throw ref new InvalidArgumentException("VideoProperty::Width/Height cannot be 0");
 	}
@@ -105,6 +106,9 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
 	m_start += m_FrameDuration;
 }
 void VideoWriteService::Close(){
-	m_pSinkWriter->Finalize();
+	if(m_pSinkWriter != NULL){
+		m_pSinkWriter->Finalize();
+	}
     SafeRelease(&m_pSinkWriter);
+	SafeRelease(&m_pByteStream);
 }

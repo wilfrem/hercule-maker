@@ -102,7 +102,6 @@
     <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IOutputStream.cs" />
     <Compile Include="IVideoWriteService.cs" />
     <Compile Include="IVideoWriteServiceFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,8 +9,9 @@ namespace MFWrapper
 	ref class MediaFoundation sealed{
 	private:
 		static MediaFoundation^ m_instance;
-		MediaFoundation();
+		MediaFoundation(){}
 	public:
+		void Init();
 		virtual ~MediaFoundation();
 		static property MediaFoundation^ Instance{
 			MediaFoundation^ get(){

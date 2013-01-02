@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Windows.Storage.Streams;
 
 namespace Wilfrem.HerculeMaker.MediaInterfaces
 {
@@ -10,10 +11,17 @@ namespace Wilfrem.HerculeMaker.MediaInterfaces
     /// </summary>
     public sealed class VideoProperty
     {
+#if NETFX_CORE
         /// <summary>
         /// 出力ファイルストリーム
         /// </summary>
-        public IOutputStream Output { get; set; }
+        public IRandomAccessStream Output { get; set; }
+#else
+        /// <summary>
+        /// 出力ファイル名
+        /// </summary>
+        public string Output { get; set; }
+#endif
         /// <summary>
         /// 動画サイズの幅
         /// </summary>

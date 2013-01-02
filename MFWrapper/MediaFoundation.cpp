@@ -5,7 +5,7 @@ using namespace Wilfrem::HerculeMaker::MFWrapper;
 using namespace Platform;
 
 MediaFoundation^ MediaFoundation::m_instance = nullptr;
-MediaFoundation::MediaFoundation()
+void MediaFoundation::Init()
 {
 	HRESULT hr;
 	hr = MFStartup(MF_VERSION);
