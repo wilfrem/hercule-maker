@@ -5,15 +5,25 @@
       <UniqueIdentifier>d907a7f2-4840-4b13-996e-d925287119d0</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Video">
+      <UniqueIdentifier>{2ec05978-b911-4fb4-9c94-8673172162ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="VideoWriteService.cpp" />
     <ClCompile Include="VideoWriteServiceFactory.cpp" />
+    <ClCompile Include="video\VideoMath.cpp">
+      <Filter>Video</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h" />
     <ClInclude Include="VideoWriteService.h" />
     <ClInclude Include="VideoWriteServiceFactory.h" />
+    <ClInclude Include="video\VideoMath.h">
+      <Filter>Video</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h" />
   </ItemGroup>
 </Project>
