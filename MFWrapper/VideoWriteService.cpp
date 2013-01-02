@@ -44,29 +44,31 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
     {
         hr = pBuffer->Lock(&pData, NULL, NULL);
     }
+	//バッファに画像をコピーする
     if (SUCCEEDED(hr))
     {
         hr = MFCopyImage(
-            pData,                      // Destination buffer.
-            cbWidth,                    // Destination stride.
-            (BYTE*)buffer->Data,        // First row in source image.
-            cbWidth,                    // Source stride.
-            cbWidth,                    // Image width in bytes.
-            m_prop->Height              // Image height in pixels.
+            pData,                      // 書き込み先バッファ.
+            cbWidth,                    // 書き込み先のstride.
+            (BYTE*)buffer->Data,        // 書き込みを行う画像データ.
+            cbWidth,                    // 書き込みデータのstide.
+            cbWidth,                    // バイト換算の画像幅.
+            m_prop->Height              // 画像高さ(pixel).
             );
     }
+	//バッファをアンロックする
     if (pBuffer)
     {
         pBuffer->Unlock();
     }
 
-    // Set the data length of the buffer.
+    // バッファ長を設定する
     if (SUCCEEDED(hr))
     {
         hr = pBuffer->SetCurrentLength(cbBuffer);
     }
 
-    // Create a media sample and add the buffer to the sample.
+    // media sampleを作成し、bufferに入れる
     if (SUCCEEDED(hr))
     {
         hr = MFCreateSample(&pSample);
@@ -76,7 +78,7 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
         hr = pSample->AddBuffer(pBuffer);
     }
 
-    // Set the time stamp and the duration.
+    // 書き込んだフレームのタイムスタンプと長さを指定
     if (SUCCEEDED(hr))
     {
         hr = pSample->SetSampleTime(m_start);
@@ -86,18 +88,20 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
         hr = pSample->SetSampleDuration(m_FrameDuration);
     }
 
-    // Send the sample to the Sink Writer.
+    // サンプルをSinkWriterに書き込み
     if (SUCCEEDED(hr))
     {
         hr = m_pSinkWriter->WriteSample(m_stream, pSample);
     }
-
+	//開放
     SafeRelease(&pSample);
     SafeRelease(&pBuffer);
+	//失敗を検知した場合はCOMExceptionを投げる
     if (FAILED(hr))
     {
 		throw ref new COMException(hr);
     }
+	//書き込んだ分だけ書き込み位置をすすめる
 	m_start += m_FrameDuration;
 }
 void VideoWriteService::Close(){
