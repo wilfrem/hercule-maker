@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "VideoWriteServiceFactory.h"
 #include "VideoWriteService.h"
 #include "video/VideoMath.h"
@@ -21,16 +21,16 @@ IVideoWriteService^ VideoWriteServiceFactory::Create(VideoProperty^ prop)
     IMFAttributes	*pAttributes = NULL;
 	
 
-	//MediaFoundation‰Šú‰»
+	//MediaFoundationåˆæœŸåŒ–
 	MediaFoundation::Instance->Init();
-	//o—ÍæpByteStream‚ğprop‚©‚çì¬
+	//å‡ºåŠ›å…ˆpByteStreamã‚’propã‹ã‚‰ä½œæˆ
 	IMFByteStream* pByteStream;
 	CHK(MFCreateMFByteStreamOnStreamEx((IUnknown*)prop->Output, &pByteStream));
 	CHK(MFCreateAttributes(&pAttributes, 10));
 	CHK(pAttributes->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true));
-	//pByteStream‚ğo—Íæ‚Æ‚µ‚½SinkWriter‚ğì¬
+	//pByteStreamã‚’å‡ºåŠ›å…ˆã¨ã—ãŸSinkWriterã‚’ä½œæˆ
 	CHK(MFCreateSinkWriterFromURL(VideoMath::GetFileExt(prop->Format), pByteStream, pAttributes, &pSinkWriter));
-    // “®‰æ‚Ìo—Íî•ñ‚Ìİ’è
+    // å‹•ç”»ã®å‡ºåŠ›æƒ…å ±ã®è¨­å®š
     CHK(MFCreateMediaType(&pMediaTypeOut));   
     CHK(pMediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
     CHK(pMediaTypeOut->SetGUID(MF_MT_SUBTYPE, GetVideoEncodingFormat(prop->Format)));
@@ -40,7 +40,7 @@ IVideoWriteService^ VideoWriteServiceFactory::Create(VideoProperty^ prop)
     CHK(MFSetAttributeRatio(pMediaTypeOut.Get(), MF_MT_FRAME_RATE, prop->FPS, 1));
     CHK(MFSetAttributeRatio(pMediaTypeOut.Get(), MF_MT_PIXEL_ASPECT_RATIO, 1, 1));
     CHK(pSinkWriter->AddStream(pMediaTypeOut.Get(), &streamIndex));
-	//“®‰æ‚Ì“ü—Íî•ñ‚Ìİ’è
+	//å‹•ç”»ã®å…¥åŠ›æƒ…å ±ã®è¨­å®š
     CHK(MFCreateMediaType(&pMediaTypeIn));
     CHK(pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
     CHK(pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32));
@@ -50,10 +50,10 @@ IVideoWriteService^ VideoWriteServiceFactory::Create(VideoProperty^ prop)
     CHK(MFSetAttributeRatio(pMediaTypeIn.Get(), MF_MT_PIXEL_ASPECT_RATIO, 1, 1));
     CHK(pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn.Get(), NULL));
 
-    // sinkwriter‚Ì‘‚«‚İ‚ğŠJn‰Â”\‚É‚·‚é
+    // sinkwriterã®æ›¸ãè¾¼ã¿ã‚’é–‹å§‹å¯èƒ½ã«ã™ã‚‹
     CHK(pSinkWriter->BeginWriting());
 
-    // VideoWriteService‚ğì¬‚µƒ|ƒCƒ“ƒ^‚ğˆø‚«“n‚·
+    // VideoWriteServiceã‚’ä½œæˆã—ãƒã‚¤ãƒ³ã‚¿ã‚’å¼•ãæ¸¡ã™
 	return ref new VideoWriteService(prop, pSinkWriter, streamIndex, pByteStream);
 }
 

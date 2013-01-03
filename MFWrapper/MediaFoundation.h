@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 namespace Wilfrem
 {
 namespace HerculeMaker
 {
 namespace MFWrapper
 {
-	//Media Foundation—˜—pŠJnEI—¹‚Ìˆ—‚ğs‚¤ƒNƒ‰ƒXB
+	//Media Foundationåˆ©ç”¨é–‹å§‹ãƒ»çµ‚äº†æ™‚ã®å‡¦ç†ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹ã€‚
 	ref class MediaFoundation sealed{
 	private:
 		static MediaFoundation^ m_instance;

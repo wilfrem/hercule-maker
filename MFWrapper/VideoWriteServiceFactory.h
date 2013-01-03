@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 using namespace Wilfrem::HerculeMaker::MediaInterfaces;
 
 namespace Wilfrem
