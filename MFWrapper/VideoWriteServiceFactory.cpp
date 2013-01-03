@@ -15,18 +15,23 @@ IVideoWriteService^ VideoWriteServiceFactory::Create(VideoProperty^ prop)
 	DWORD streamIndex = 0;
 	IMFMediaType    *pMediaTypeOut = NULL;   
     IMFMediaType    *pMediaTypeIn = NULL;   
-    
+    IMFAttributes	*pAttributes = NULL;
+
 	//MediaFoundation‰Šú‰»
 	MediaFoundation::Instance->Init();
-
 	//o—ÍæpByteStream‚ğprop‚©‚çì¬
 	IMFByteStream* pByteStream;
 	HRESULT hr = MFCreateMFByteStreamOnStreamEx((IUnknown*)prop->Output, &pByteStream);
-	
+	if(SUCCEEDED(hr)){
+		hr = MFCreateAttributes(&pAttributes, 10);
+	}
+	if(SUCCEEDED(hr)){
+		hr = pAttributes->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true);
+	}
 	//pByteStream‚ğo—Íæ‚Æ‚µ‚½SinkWriter‚ğì¬
 	if (SUCCEEDED(hr))
 	{
-		hr = MFCreateSinkWriterFromURL(NULL, pByteStream, NULL, &pSinkWriter);
+		hr = MFCreateSinkWriterFromURL(L".wmv", pByteStream, pAttributes, &pSinkWriter);
 	}
     // “®‰æî•ñ‚Ìİ’è
     if (SUCCEEDED(hr))

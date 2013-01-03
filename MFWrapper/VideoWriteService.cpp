@@ -32,7 +32,7 @@ void VideoWriteService::WriteFrame(const Array<uint32,1>^ buffer){
 
     BYTE *pData = NULL;
 	//バッファが書き込みサイズと一致しているかチェック
-	if(buffer->Length == m_prop->Width * m_prop->Height)
+	if(buffer->Length != m_prop->Width * m_prop->Height)
 	{
 		throw ref new InvalidArgumentException("buffer size shuld equal to Width * Height");
 	}

@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Wilfrem.HerculeMaker.MediaInterfaces;
+using Wilfrem.HerculeMaker.MFWrapper;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -31,8 +35,40 @@ namespace Wilfrem.HerculeMaker.Front
         /// </summary>
         /// <param name="e">このページにどのように到達したかを説明するイベント データ。Parameter 
         /// プロパティは、通常、ページを構成するために使用します。</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
         {
+            var picker = new FileSavePicker();
+            picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
+            picker.FileTypeChoices.Add("WMVファイル", new List<string>(new string[1] { ".wmv" }));
+            picker.SuggestedFileName = "output.wmv";
+            var file = await picker.PickSaveFileAsync();
+            Write(file);
+        }
+        public async void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+        }
+        private async void Write(StorageFile file)
+        {
+            var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
+            var factory = new VideoWriteServiceFactory();
+            var prop = new VideoProperty();
+            prop.BitRate = 800000;
+            prop.Format = VideoEncoding.WindowsMediaVideo;
+            prop.FPS = 25;
+            prop.Height = 480;
+            prop.Width = 640;
+            prop.Output = stream;
+            var service = factory.Create(prop);
+            UInt32[] data = new UInt32[prop.Height * prop.Width];
+            for (int i = 0; i < data.Length; ++i)
+            {
+                data[i] = 0x0000FF00;
+            }
+            for (int i = 0; i < 20 * prop.FPS; ++i)
+            {
+                service.WriteFrame(data);
+            }
+            service.Close();
         }
     }
 }
