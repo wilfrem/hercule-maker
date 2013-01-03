@@ -28,6 +28,18 @@ public:
 			return (DWORD)floor(10000000.0 / (double)fps + 0.5);
 		}
 	}
+	static inline const LPCWSTR GetFileExt(Wilfrem::HerculeMaker::MediaInterfaces::VideoEncoding encoding)
+	{
+		switch(encoding)
+		{
+		case Wilfrem::HerculeMaker::MediaInterfaces::VideoEncoding::H264:
+			return L".mp4";
+		case Wilfrem::HerculeMaker::MediaInterfaces::VideoEncoding::WindowsMediaVideo:
+			return L".wmv";
+		default:
+			throw ref new Platform::NotImplementedException();
+		}
+	}
 };
 }
 }

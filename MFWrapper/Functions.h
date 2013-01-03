@@ -1,10 +1,18 @@
 #pragma once
+
 namespace Wilfrem
 {
 namespace HerculeMaker
 {
 namespace MFWrapper
 {
+inline void CHK(HRESULT hr)
+{
+	if(FAILED(hr))
+	{
+		throw ref new Platform::COMException(hr);
+	}
+}
 
 template <class T> void SafeRelease(T **ppT)
 {

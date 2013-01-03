@@ -10,5 +10,6 @@
 #include <mfreadwrite.h>
 #include <mfobjects.h>
 #include <mftransform.h>
+#include <wrl\client.h>
 #include "Functions.h"
 #include "MediaFoundation.h"

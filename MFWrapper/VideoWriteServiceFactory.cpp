@@ -1,9 +1,12 @@
 #include "pch.h"
 #include "VideoWriteServiceFactory.h"
 #include "VideoWriteService.h"
+#include "video/VideoMath.h"
 
 using namespace Wilfrem::HerculeMaker::MFWrapper;
 using namespace Platform;
+using namespace Wilfrem::HerculeMaker::MFWrapper::Video;
+using namespace Microsoft::WRL;
 
 VideoWriteServiceFactory::VideoWriteServiceFactory()
 {
@@ -13,113 +16,45 @@ IVideoWriteService^ VideoWriteServiceFactory::Create(VideoProperty^ prop)
 {
 	IMFSinkWriter* pSinkWriter = NULL;
 	DWORD streamIndex = 0;
-	IMFMediaType    *pMediaTypeOut = NULL;   
-    IMFMediaType    *pMediaTypeIn = NULL;   
+	ComPtr<IMFMediaType>    pMediaTypeOut;   
+    ComPtr<IMFMediaType>    pMediaTypeIn;   
     IMFAttributes	*pAttributes = NULL;
+	
 
 	//MediaFoundation初期化
 	MediaFoundation::Instance->Init();
 	//出力先pByteStreamをpropから作成
 	IMFByteStream* pByteStream;
-	HRESULT hr = MFCreateMFByteStreamOnStreamEx((IUnknown*)prop->Output, &pByteStream);
-	if(SUCCEEDED(hr)){
-		hr = MFCreateAttributes(&pAttributes, 10);
-	}
-	if(SUCCEEDED(hr)){
-		hr = pAttributes->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true);
-	}
+	CHK(MFCreateMFByteStreamOnStreamEx((IUnknown*)prop->Output, &pByteStream));
+	CHK(MFCreateAttributes(&pAttributes, 10));
+	CHK(pAttributes->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, true));
 	//pByteStreamを出力先としたSinkWriterを作成
-	if (SUCCEEDED(hr))
-	{
-		hr = MFCreateSinkWriterFromURL(L".wmv", pByteStream, pAttributes, &pSinkWriter);
-	}
-    // 動画情報の設定
-    if (SUCCEEDED(hr))
-    {
-        hr = MFCreateMediaType(&pMediaTypeOut);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);     
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeOut->SetGUID(MF_MT_SUBTYPE, GetVideoEncodingFormat(prop->Format));   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeOut->SetUINT32(MF_MT_AVG_BITRATE, prop->BitRate);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeOut->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeSize(pMediaTypeOut, MF_MT_FRAME_SIZE, prop->Width, prop->Height);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_FRAME_RATE, prop->FPS, 1);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeRatio(pMediaTypeOut, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pSinkWriter->AddStream(pMediaTypeOut, &streamIndex);   
-    }
-
-    // 入力情報の設定
-    if (SUCCEEDED(hr))
-    {
-        hr = MFCreateMediaType(&pMediaTypeIn);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32);
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pMediaTypeIn->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeSize(pMediaTypeIn, MF_MT_FRAME_SIZE, prop->Width, prop->Height);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_FRAME_RATE, prop->FPS, 1);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = MFSetAttributeRatio(pMediaTypeIn, MF_MT_PIXEL_ASPECT_RATIO, 1, 1);   
-    }
-    if (SUCCEEDED(hr))
-    {
-        hr = pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn, NULL);   
-    }
+	CHK(MFCreateSinkWriterFromURL(VideoMath::GetFileExt(prop->Format), pByteStream, pAttributes, &pSinkWriter));
+    // 動画の出力情報の設定
+    CHK(MFCreateMediaType(&pMediaTypeOut));   
+    CHK(pMediaTypeOut->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
+    CHK(pMediaTypeOut->SetGUID(MF_MT_SUBTYPE, GetVideoEncodingFormat(prop->Format)));
+    CHK(pMediaTypeOut->SetUINT32(MF_MT_AVG_BITRATE, prop->BitRate));
+    CHK(pMediaTypeOut->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive));
+    CHK(MFSetAttributeSize(pMediaTypeOut.Get(), MF_MT_FRAME_SIZE, prop->Width, prop->Height));
+    CHK(MFSetAttributeRatio(pMediaTypeOut.Get(), MF_MT_FRAME_RATE, prop->FPS, 1));
+    CHK(MFSetAttributeRatio(pMediaTypeOut.Get(), MF_MT_PIXEL_ASPECT_RATIO, 1, 1));
+    CHK(pSinkWriter->AddStream(pMediaTypeOut.Get(), &streamIndex));
+	//動画の入力情報の設定
+    CHK(MFCreateMediaType(&pMediaTypeIn));
+    CHK(pMediaTypeIn->SetGUID(MF_MT_MAJOR_TYPE, MFMediaType_Video));
+    CHK(pMediaTypeIn->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB32));
+    CHK(pMediaTypeIn->SetUINT32(MF_MT_INTERLACE_MODE, MFVideoInterlace_Progressive));
+    CHK(MFSetAttributeSize(pMediaTypeIn.Get(), MF_MT_FRAME_SIZE, prop->Width, prop->Height));
+    CHK(MFSetAttributeRatio(pMediaTypeIn.Get(), MF_MT_FRAME_RATE, prop->FPS, 1));
+    CHK(MFSetAttributeRatio(pMediaTypeIn.Get(), MF_MT_PIXEL_ASPECT_RATIO, 1, 1));
+    CHK(pSinkWriter->SetInputMediaType(streamIndex, pMediaTypeIn.Get(), NULL));
 
     // sinkwriterの書き込みを開始可能にする
-    if (SUCCEEDED(hr))
-    {
-        hr = pSinkWriter->BeginWriting();
-    }
+    CHK(pSinkWriter->BeginWriting());
 
-    SafeRelease(&pMediaTypeOut);
-    SafeRelease(&pMediaTypeIn);
     // VideoWriteServiceを作成しポインタを引き渡す
-	if (SUCCEEDED(hr))
-    {
-		return ref new VideoWriteService(prop, pSinkWriter, streamIndex, pByteStream);
-    }else{
-		throw ref new COMException(hr);
-	}
+	return ref new VideoWriteService(prop, pSinkWriter, streamIndex, pByteStream);
 }
 
 
