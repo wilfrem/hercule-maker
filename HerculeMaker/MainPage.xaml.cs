@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Wilfrem.HerculeMaker.MediaInterfaces;
 using Wilfrem.HerculeMaker.MFWrapper;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.Storage;
 using Windows.Storage.Pickers;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -35,19 +37,24 @@ namespace Wilfrem.HerculeMaker.Front
         /// </summary>
         /// <param name="e">このページにどのように到達したかを説明するイベント データ。Parameter 
         /// プロパティは、通常、ページを構成するために使用します。</param>
-        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+        }
+        private async void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var picker = new FileSavePicker();
             picker.SuggestedStartLocation = PickerLocationId.VideosLibrary;
             picker.FileTypeChoices.Add("WMVファイル", new List<string>(new string[1] { ".wmv" }));
             picker.SuggestedFileName = "output.wmv";
             var file = await picker.PickSaveFileAsync();
-            Write(file);
+            if (file != null)
+            {
+                await Write(file);
+                MessageDialog dialog = new MessageDialog("書き出しが終了しました");
+                await dialog.ShowAsync();
+            }
         }
-        public async void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-        }
-        private async void Write(StorageFile file)
+        private async Task Write(StorageFile file)
         {
             var stream = await file.OpenAsync(FileAccessMode.ReadWrite);
             var factory = new VideoWriteServiceFactory();
